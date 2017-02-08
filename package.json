@@ -1,0 +1,19 @@
+{
+  "name": "tobj",
+  "title": "TObj",
+  "version": "0.1.0",
+  "description": "Tree object, manipulation and traversal.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "object"
+  ],
+  "author": "Jonathan Delgado <hi@jon.soy>",
+  "license": "MIT",
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^3.2.0"
+  }
+}
