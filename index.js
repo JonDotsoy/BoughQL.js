@@ -1,11 +1,13 @@
 const _eq = require('lodash/eq')
 const _set = require('lodash/set')
 const _get = require('lodash/get')
+const _setimmutable = require('setimmutable')
 
 const parentNode = Symbol('parentNode')
 const rootNode = Symbol('rootNode')
 const pathTravel = Symbol('pathTravel')
 const noValue = Symbol('noValue')
+const immutable = 'immutable'
 
 /**
  * Selector
@@ -16,34 +18,27 @@ function genSelectChild ({_, _t: __t}) {
 
     if (paramChild === undefined) return _t
 
-    const obj = _[paramChild]
-
-    if (obj) {
-      return T(obj, {
-        [parentNode]: _t,
-        [pathTravel]: [..._t.pathTravel, paramChild],
-        [rootNode]: _t.rootNode || _t
-      })
-    } else {
-      return T({}, {
-        [noValue]: true,
-        [parentNode]: _t,
-        [pathTravel]: [..._t.pathTravel, paramChild],
-        [rootNode]: _t.rootNode || _t
-      })
-    }
+    return T(_, {
+      [parentNode]: _t,
+      [pathTravel]: [..._t.pathTravel, paramChild],
+      [rootNode]: _t.rootNode || _t
+    })
   }
 }
 
 /**
  * Set a value
  */
-function getSet ({_, rootNode, pathTravel}) {
+function getSet ({_, rootNode, pathTravel, immutable}) {
   /**
    * @param {*} value
    */
   return function set (value) {
-    rootNode._ = _set(rootNode._, [...pathTravel], value)
+    if (immutable) {
+      rootNode._ = _setimmutable(rootNode._, [...pathTravel], value)
+    } else {
+      rootNode._ = _set(rootNode._, [...pathTravel], value)
+    }
 
     return this
   }
@@ -85,6 +80,7 @@ function T (objArg, opts = {}) {
   const _rootNode = opts[rootNode] || null
   const _pathTravel = opts[pathTravel] || []
   const _noValue = opts[noValue] || false
+  const _immutable = opts[immutable] || true
 
   let _t
 
@@ -94,6 +90,7 @@ function T (objArg, opts = {}) {
   })
 
   _t[noValue] = _noValue
+  _t.immutable = _immutable
 
   _t._ = objArg
   _t.valueOf = genValueOf(_t)
