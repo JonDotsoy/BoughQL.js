@@ -8,7 +8,11 @@ describe('TObj', function () {
 
     const t = T(obj)
 
-    expect(t('a')('b')('c')(2)('e')('f')('g')._).to.be('ok')
+    expect(t('a')('b')('c')(2)('e')('f')('g').valueOf()).to.be('ok')
+
+
+    // console.log(t('a')('b')('c')(2)('e')('f')('g').pathTravel)
+    // console.log(t('a')('b')('c')(2)('e')('f')('g').rootNode)
   })
 
   it('Example use 2', () => {

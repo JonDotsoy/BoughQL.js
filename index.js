@@ -38,17 +38,12 @@ function genSelectChild ({_, _t: __t}) {
 /**
  * Set a value
  */
-function getSet ({_, [noValue]: _noValue, rootNode, pathTravel}) {
+function getSet ({_, rootNode, pathTravel}) {
   /**
-   * @param {String} [name]
-   * @param {any}    value
+   * @param {*} value
    */
   return function set (value) {
-    if (_noValue) {
-      _set(rootNode, [...pathTravel], value)
-    } else {
-      _[name] = value
-    }
+    rootNode._ = _set(rootNode._, [...pathTravel], value)
 
     return this
   }
@@ -57,9 +52,9 @@ function getSet ({_, [noValue]: _noValue, rootNode, pathTravel}) {
 /**
  * Comapare value
  */
-function genEq ({valueOf}) {
+function genEq (_t) {
   return function eq (value) {
-    return _eq(valueOf(), value)
+    return _eq(_t.valueOf(), value)
   }
 }
 
@@ -70,15 +65,12 @@ function genEq ({valueOf}) {
 function genValueOf (_t) {
   const {[noValue]: _noValue} = _t
 
-  if (_noValue) {
-    return () => {
-      const {rootNode, pathTravel, _} = _t
+  return () => {
+    const {rootNode, pathTravel, _} = _t
 
-      return _get(rootNode, pathTravel)
-    }
-  } else {
-    const {_} = _t
-    return () => _
+    if (pathTravel.length === 0 || rootNode === null) return _
+
+    return _get(rootNode.valueOf(), pathTravel)
   }
 }
 
@@ -86,6 +78,9 @@ function genValueOf (_t) {
  * Tree Object
  */
 function T (objArg, opts = {}) {
+  if (objArg instanceof T) return objArg
+  if (!(this instanceof T)) return new T(objArg, opts)
+
   const _parentNode = opts[parentNode] || null
   const _rootNode = opts[rootNode] || null
   const _pathTravel = opts[pathTravel] || []
