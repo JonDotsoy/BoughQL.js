@@ -10,7 +10,6 @@ describe('TObj', function () {
 
     expect(t('a')('b')('c')(2)('e')('f')('g').valueOf()).to.be('ok')
 
-
     // console.log(t('a')('b')('c')(2)('e')('f')('g').pathTravel)
     // console.log(t('a')('b')('c')(2)('e')('f')('g').rootNode)
   })
@@ -53,7 +52,7 @@ describe('TObj', function () {
 
     const t = T(obj)
 
-    expect(() => {t('a')('notExists')('c')('d')}).not.to.throwError()
+    expect(() => { t('a')('notExists')('c')('d') }).not.to.throwError()
 
     const child = t('a')('notExists')('c')('d')
     const pathTravel = child.pathTravel
@@ -139,11 +138,10 @@ describe('TObj', function () {
       expect(JSON.stringify(t)).to.be(JSON.stringify(obj))
     })
 
-
-    it("t#invoke", () => {
+    it('t#invoke', () => {
       const { T } = require('..')
 
-      const obj = { a: { b: { c: { d: ((n=1) => n + 3) } } } }
+      const obj = { a: { b: { c: { d: (n = 1) => n + 3 } } } }
 
       const t = T(obj)
 
@@ -151,7 +149,6 @@ describe('TObj', function () {
       expect(t('a')('b')('c')('d').invoke(2)).to.be(5)
       expect(t('a')('b')('c')('d').invoke(10)).to.be(13)
     })
-
   })
 })
 
