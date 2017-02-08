@@ -1,6 +1,7 @@
 const _eq = require('lodash/eq')
 const _set = require('lodash/set')
 const _get = require('lodash/get')
+const _invoke = require('lodash/invoke')
 const _setimmutable = require('setimmutable')
 
 const parentNode = Symbol('parentNode')
@@ -70,6 +71,17 @@ function genValueOf (_t) {
 }
 
 /**
+ * invoke a function inside element
+ */
+function getInvoke (_t) {
+  return function (...args) {
+    const {rootNode, pathTravel} = _t
+
+    return _invoke(rootNode.valueOf(), pathTravel, ...args)
+  }
+}
+
+/**
  * Tree Object
  */
 function T (objArg, opts = {}) {
@@ -106,6 +118,7 @@ function T (objArg, opts = {}) {
 
   _t.set = getSet(_t)
   _t.eq = genEq(_t)
+  _t.invoke = getInvoke(_t)
 
   return _t
 }

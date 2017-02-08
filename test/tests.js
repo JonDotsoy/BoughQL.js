@@ -138,6 +138,20 @@ describe('TObj', function () {
       expect(t.toJSON()).to.be(obj)
       expect(JSON.stringify(t)).to.be(JSON.stringify(obj))
     })
+
+
+    it("t#invoke", () => {
+      const { T } = require('..')
+
+      const obj = { a: { b: { c: { d: ((n=1) => n + 3) } } } }
+
+      const t = T(obj)
+
+      expect(t('a')('b')('c')('d').invoke()).to.be(4)
+      expect(t('a')('b')('c')('d').invoke(2)).to.be(5)
+      expect(t('a')('b')('c')('d').invoke(10)).to.be(13)
+    })
+
   })
 })
 
